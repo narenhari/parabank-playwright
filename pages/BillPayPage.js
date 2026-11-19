@@ -24,6 +24,14 @@ class BillPayPage {
     await this.fromSelect.selectOption(fromId);
     await this.sendButton.click();
   }
+    async payFromDefaultAccount(payee, amount) {
+    await this.goto();
+    const firstOption = this.fromSelect.locator('option').first();
+    await firstOption.waitFor({ state: 'attached' });
+    const fromId = (await firstOption.innerText()).trim();
+    await this.pay(payee, amount, fromId);
+    return fromId;
+  }
 }
 
 module.exports = { BillPayPage };
