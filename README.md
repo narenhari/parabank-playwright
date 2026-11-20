@@ -4,7 +4,7 @@ A growing UI and API test suite for [ParaBank](https://parabank.parasoft.com/par
 
 > Built with AI assistance. I reviewed, ran, broke on purpose and fixed every test myself.
 
-
+![alt text](image.png)
 
 ## What is covered
 
