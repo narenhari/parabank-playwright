@@ -15,27 +15,27 @@ jobs:
     env:
       BASE_URL: http://localhost:8080/parabank/
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps chromium
-    - name: Wait for ParaBank
-      run: |
-        for i in $(seq 1 60); do
-          if curl -sf http://localhost:8080/parabank/index.htm > /dev/null; then exit 0; fi
-          sleep 5
-        done
-        echo "ParaBank did not start"
-        exit 1
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      - name: Wait for ParaBank
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8080/parabank/index.htm > /dev/null; then break; fi
+            sleep 5
+          done
+          curl -s -X POST -w "\ninit status: %{http_code}\n" http://localhost:8080/parabank/services/bank/initializeDB
+          curl -s -o /dev/null -w "customer check: %{http_code}\n" http://localhost:8080/parabank/services/bank/customers/12212
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
