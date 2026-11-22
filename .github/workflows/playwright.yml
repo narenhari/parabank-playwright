@@ -7,6 +7,13 @@ jobs:
   test:
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    services:
+      parabank:
+        image: parasoft/parabank
+        ports:
+          - 8080:8080
+    env:
+      BASE_URL: http://localhost:8080/parabank/
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -16,6 +23,14 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps chromium
+    - name: Wait for ParaBank
+      run: |
+        for i in $(seq 1 60); do
+          if curl -sf http://localhost:8080/parabank/index.htm > /dev/null; then exit 0; fi
+          sleep 5
+        done
+        echo "ParaBank did not start"
+        exit 1
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4

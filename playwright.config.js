@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: [['html', { open: 'never' }]],
 
   use: {
-    baseURL: 'https://parabank.parasoft.com/parabank/',
+    baseURL: process.env.BASE_URL || 'https://parabank.parasoft.com/parabank/',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
