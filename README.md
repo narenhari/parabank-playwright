@@ -69,7 +69,7 @@ On Windows, use forward slashes in path filters (`tests/api`), because Playwrigh
 
 ## CI
 
-GitHub Actions runs the suite in Chromium and uploads the HTML report as an artifact. It runs on demand (the **Run workflow** button) and once a day, not on every push. The reason is in the next section.
+CI runs on GitHub Actions (on demand and daily). It starts ParaBank in a Docker service container, waits for it and initialises its database, then runs the full suite and uploads the HTML report as an artifact. Running against a local container avoids the public demo site's rate limit.
 
 ## Findings
 
